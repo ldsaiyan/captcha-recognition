@@ -19,7 +19,18 @@ function run ($code) {
         $library == null ? $library = array(array($codearr => $lib)) : $library[$i][$codearr] = $lib;   //解决key不嫩重复问题
     }
 
-    file_put_contents('../dict/dict_file.txt', print_r($library, true),FILE_APPEND);
+//    foreach ($library as $item) {
+
+    for ($i=0;$i<4;$i++) {
+//                $arr = [];
+//                $arr[array_keys($item)[0]] = $item[array_keys($item)[0]];
+
+        file_put_contents('../dict/'.$i.'.txt', print_r($library[$i], true),FILE_APPEND);
+    };
+
+//    };
+
+//    file_put_contents('./dict/dict_file.txt', print_r($library, true),FILE_APPEND);
 
     // 可视化
 //    foreach ($list[0] as $row) {

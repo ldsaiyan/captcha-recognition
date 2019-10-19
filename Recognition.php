@@ -53,7 +53,7 @@ class Recognition
      */
     protected $rbg;
 
-    public function __construct($data=[],$rbg=100)
+    public function __construct($data=[],$rbg=150)
     {
 
         // set side

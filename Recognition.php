@@ -133,22 +133,18 @@ class Recognition
 
         $match = array('per' => '', 'key' => '');
 
-//        var_dump($verify);
-
         if ($num == 0) {
-            print_r($this->libraryFirst);
+
             foreach ($libraryFirst as $item) {
                 foreach ($item as $key => $value) {
                     $percent = 0.0;
                     similar_text($this->libraryFirst, $value, $percent);   //计算两个字符串的相似度，并返回匹配字符的数目
-                    var_dump($percent);
-                    var_dump($key);
+
                     if($match['per'] == '') {
                         $match['per'] = $percent;
                         $match['key'] = $key;
                     } else {
                         if($percent > $match['per'] ) {
-//                        var_dump($percent);
                             $match['per'] = $percent;
                             $match['key'] = $key;
                         }
@@ -160,58 +156,67 @@ class Recognition
             return $match;
 
         } else if ($num == 1){
-            var_dump($this->librarySecond);
-            foreach ($librarySecond as $key => $value) {
-                $percent = 0.0;
-                similar_text($this->librarySecond, $value, $percent);
 
-                if($match['per'] == '') {
-                    $match['per'] = $percent;
-                    $match['key'] = $key;
-                } else {
-                    if($percent > $match['per']) {
+            foreach ($librarySecond as $item) {
+                foreach ($item as $key => $value) {
+                    $percent = 0.0;
+                    similar_text($this->librarySecond, $value, $percent);
+
+                    if($match['per'] == '') {
                         $match['per'] = $percent;
                         $match['key'] = $key;
+                    } else {
+                        if($percent > $match['per']) {
+                            $match['per'] = $percent;
+                            $match['key'] = $key;
+                        }
                     }
                 }
             }
+
 
             return $match;
 
         } else if ($num == 2){
-            var_dump($this->libraryThird);
-            foreach ($libraryThird as $key => $value) {
-                $percent = 0.0;
-                similar_text($this->libraryThird, $value, $percent);
 
-                if($match['per'] == '') {
-                    $match['per'] = $percent;
-                    $match['key'] = $key;
-                } else {
-                    if($percent > $match['per']) {
+            foreach ($libraryThird as $item){
+                foreach ($item as $key => $value) {
+                    $percent = 0.0;
+                    similar_text($this->libraryThird, $value, $percent);
+
+                    if($match['per'] == '') {
                         $match['per'] = $percent;
                         $match['key'] = $key;
+                    } else {
+                        if($percent > $match['per']) {
+                            $match['per'] = $percent;
+                            $match['key'] = $key;
+                        }
                     }
                 }
             }
+
 
             return $match;
         } else if ($num == 3) {
-            var_dump($this->libraryForth);
-            foreach ($libraryFour as $key => $value) {
-                $percent = 0.0;
-                similar_text($this->libraryForth, $value, $percent);
 
-                if($match['per'] == '') {
-                    $match['per'] = $percent;
-                    $match['key'] = $key;
-                } else {
-                    if($percent > $match['per']) {
+            foreach ($libraryFour as $item) {
+                foreach ($item as $key => $value) {
+                    $percent = 0.0;
+                    similar_text($this->libraryForth, $value, $percent);
+
+                    if($match['per'] == '') {
                         $match['per'] = $percent;
                         $match['key'] = $key;
+                    } else {
+                        if($percent > $match['per']) {
+                            $match['per'] = $percent;
+                            $match['key'] = $key;
+                        }
                     }
                 }
             }
+
 
             return $match;
         }

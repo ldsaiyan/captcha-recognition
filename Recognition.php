@@ -3,7 +3,7 @@
  *
  *
  */
-require_once ("./dict/dict_array.php");
+require ("./dict/dict_array.php");
 
 class Recognition
 {
@@ -26,7 +26,10 @@ class Recognition
     /**
      * @var string|null 入典
      */
-    protected $library;
+    protected $libraryFirst;
+    protected $librarySecond;
+    protected $libraryThird;
+    protected $libraryForth;
 
     /**
      * @var integer 首字像素范围
@@ -53,7 +56,7 @@ class Recognition
      */
     protected $rbg;
 
-    public function __construct($data=[],$rbg=150)
+    public function __construct($data=[],$rbg=100)
     {
 
         // set side
@@ -68,7 +71,7 @@ class Recognition
         //set rbg
         $this -> rbg = $rbg;
 
-        $this->run();
+        //        $this->run();
 
     }
 
@@ -82,12 +85,10 @@ class Recognition
         $this -> splitImage();
 
         for ($i=0; $i<=3; $i++) {
-            $this -> library($this->list[$i]);
-            $match = $this -> match($this -> library,$i);
-            //print_r($match['key']);
+            $this -> library($this->list[$i],$i);
+            $match = $this -> match($i);
             $this -> code .= $match['key'];
         }
-
 
 //        foreach ($library as $item) {
 //            foreach ($item as $code) {
@@ -102,13 +103,18 @@ class Recognition
     /**
      * @param array $list   After split
      */
-    protected function library ($list)
+    protected function library ($list,$num)
     {
+
         foreach ($list as $row) {
             foreach ($row as $column) {
-                $this ->library .= $column;
+                if ($num==0) {$this ->libraryFirst .= $column;}
+                if ($num==1) {$this ->librarySecond .= $column;}
+                if ($num==2) {$this ->libraryThird .= $column;}
+                if ($num==3) {$this ->libraryForth .= $column;}
             }
         }
+
     }
 
 // 匹配
@@ -118,7 +124,7 @@ class Recognition
      * @param integer $num    num
      * @return array
      */
-    protected function match ($verify,$num)
+    protected function match ($num)
     {
         global $libraryFirst;
         global $librarySecond;
@@ -127,28 +133,37 @@ class Recognition
 
         $match = array('per' => '', 'key' => '');
 
-        if ($num == 0) {
-            foreach ($libraryFirst as $key => $value) {
-                $percent = 0.0;
-                similar_text($verify, $value, $percent);   //计算两个字符串的相似度，并返回匹配字符的数目
+//        var_dump($verify);
 
-                if($match['per'] == '') {
-                    $match['per'] = $percent;
-                    $match['key'] = $key;
-                } else {
-                    if($percent > $match['per']) {
+        if ($num == 0) {
+            print_r($this->libraryFirst);
+            foreach ($libraryFirst as $item) {
+                foreach ($item as $key => $value) {
+                    $percent = 0.0;
+                    similar_text($this->libraryFirst, $value, $percent);   //计算两个字符串的相似度，并返回匹配字符的数目
+                    var_dump($percent);
+                    var_dump($key);
+                    if($match['per'] == '') {
                         $match['per'] = $percent;
                         $match['key'] = $key;
+                    } else {
+                        if($percent > $match['per'] ) {
+//                        var_dump($percent);
+                            $match['per'] = $percent;
+                            $match['key'] = $key;
+                        }
                     }
                 }
             }
 
+
             return $match;
 
         } else if ($num == 1){
+            var_dump($this->librarySecond);
             foreach ($librarySecond as $key => $value) {
                 $percent = 0.0;
-                similar_text($verify, $value, $percent);   //计算两个字符串的相似度，并返回匹配字符的数目
+                similar_text($this->librarySecond, $value, $percent);
 
                 if($match['per'] == '') {
                     $match['per'] = $percent;
@@ -164,9 +179,10 @@ class Recognition
             return $match;
 
         } else if ($num == 2){
+            var_dump($this->libraryThird);
             foreach ($libraryThird as $key => $value) {
                 $percent = 0.0;
-                similar_text($verify, $value, $percent);   //计算两个字符串的相似度，并返回匹配字符的数目
+                similar_text($this->libraryThird, $value, $percent);
 
                 if($match['per'] == '') {
                     $match['per'] = $percent;
@@ -181,9 +197,10 @@ class Recognition
 
             return $match;
         } else if ($num == 3) {
+            var_dump($this->libraryForth);
             foreach ($libraryFour as $key => $value) {
                 $percent = 0.0;
-                similar_text($verify, $value, $percent);   //计算两个字符串的相似度，并返回匹配字符的数目
+                similar_text($this->libraryForth, $value, $percent);
 
                 if($match['per'] == '') {
                     $match['per'] = $percent;
@@ -228,12 +245,21 @@ class Recognition
     protected function splitImage ()
     {
 
-        for ($i=0; $i<count($this -> image); $i++) {
-            if ($i<=10) {
-                unset($this -> image[$i]);
-                array_pop($this -> image);
-            }
+//        for ($i=0; $i<count($this -> image); $i++) {
+//            if ($i<=10) {
+//                unset($this -> image[$i]);
+//                array_pop($this -> image);
+//            }
+//        }
+
+        // 上下切割
+        for ($i=0;$i<18;$i++) {
+            unset($this -> image[$i]);
         }
+        for ($i=60;$i>45;$i--) {
+            unset($this -> image[$i]);
+        }
+
 
         $first = $this -> extractWord($this -> image,$this->Fstart,$this->Flength);
         $second = $this -> extractWord($this -> image,$this->Sstart,$this->Slength);

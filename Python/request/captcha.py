@@ -22,7 +22,7 @@ class CaptchaRequest:
         return data
 
     def downloadCaptcha(self,data):
-        with open('../source/captcha.png','wb') as f:
+        with open('../source/captcha.gif','wb') as f:
             f.write(data)
         # judge
         return True
